@@ -68,7 +68,7 @@ export default class App extends React.Component {
     return (
       <div className='container'>
 
-        <div className='h1 text-center'>Mortgage Calculator</div>
+        <h3 className='h1 text-center'>Mortgage Calculator</h3>
         <br />
 
         <div className="form-horizontal">
