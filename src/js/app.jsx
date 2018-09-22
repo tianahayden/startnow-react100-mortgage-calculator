@@ -1,5 +1,74 @@
 import React from 'react';
 
+class Table extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+
+  render() {
+    let balance = parseFloat(this.props.balanceValue)
+    let interestArray = []
+    let paidOffArray = []
+    let currentBalanceArray = []
+    let year = 0
+    let yearArray = []
+
+    if (this.props.isToggle == true) {
+      while (balance > 0) {
+        let interest = balance * parseFloat(this.props.rateValue / 100)
+        interestArray.push(interest.toFixed(2))
+
+        let paidOff = (parseFloat(this.props.output) * 12) - interest
+        paidOffArray.push(paidOff.toFixed(2))
+
+        let currentBalance = balance - paidOff
+        currentBalanceArray.push(currentBalance.toFixed(2))
+        balance = currentBalance
+        year++
+        yearArray.push(year)
+      }
+    }
+
+    yearArray.pop()
+    interestArray.pop()
+    paidOffArray.pop()
+    currentBalanceArray.pop()
+
+
+    if (this.props.isToggle == true) {
+      return (
+        <div>
+          <h3>Payments Over Time</h3>
+          <table className="table">
+            <thead>
+              <tr>
+                <th></th>
+                {yearArray.map((e, i) => <th>Year {i + 1}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Total Interest Paid</td>
+                {interestArray.map((e, i) => <td>{interestArray[i]}</td>)}
+              </tr>
+              <tr>
+                <td>Total Paid Off</td>
+                {paidOffArray.map((e, i) => <td>{paidOffArray[i]}</td>)}
+              </tr>
+              <tr>
+                <td>Current Balance</td>
+                {currentBalanceArray.map((e, i) => <td>{currentBalanceArray[i]}</td>)}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+  }
+}
+
+
 export default class App extends React.Component {
   // your Javascript goes here
   constructor() {
@@ -10,14 +79,39 @@ export default class App extends React.Component {
       termValue: '15',
       output: '',
       outputText: '',
+      isToggle: false
     };
 
     this.handleBalanceChange = this.handleBalanceChange.bind(this);
     this.handleRateChange = this.handleRateChange.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.calculatePayment = this.calculatePayment.bind(this);
+    this.renderTable = this.renderTable.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
   };
+
+
+  renderTable() {
+    return (
+      <Table
+        isToggle={this.state.isToggle}
+        balanceValue={this.state.balanceValue}
+        termValue={this.state.termValue}
+        rateValue={this.state.rateValue}
+        output={this.state.output}
+      />
+    )
+  }
+
+
+  handleClick() {
+    this.calculatePayment();
+
+    this.setState({
+      isToggle: true
+    })
+  }
 
   handleBalanceChange(event) {
     this.setState({
@@ -40,17 +134,17 @@ export default class App extends React.Component {
 
   calculatePayment() {
     const balance = parseFloat(this.state.balanceValue);
-    const rate = (parseFloat(this.state.rateValue)) / 100 / 12;
+    const rate = parseFloat(this.state.rateValue) / 100 / 12;
     const term = parseInt(this.state.termValue);
     const months = term * 12
     var calculation =
       // balance*rate*months
-      balance * ((rate * ((1 + rate)**months))) / ((((1 + rate)**months) - 1))
+      balance * ((rate * ((1 + rate) ** months))) / ((((1 + rate) ** months) - 1))
     var output = calculation.toFixed(2)
 
     this.setState({
       output: output,
-      outputText: "is your payment.",
+      outputText: 'is your payment.',
     })
 
   };
@@ -88,14 +182,17 @@ export default class App extends React.Component {
             <label className="col-sm-2 control-label">Loan Term</label>
             <div className="col-sm-10">
               <select value={term} onChange={this.handleTermChange} name="term" className="form-control" id="loanTerms">
+                <option value="10">10 years</option>
                 <option value="15">15 years</option>
+                <option value="20">20 years</option>
+                <option value="25">25 years</option>
                 <option value="30">30 years</option>
               </select>
             </div>
           </div>
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <button type="submit" name="submit" onClick={this.calculatePayment} className="btn btn-default">Submit</button>
+              <button type="submit" name="submit" onClick={this.handleClick} className="btn btn-default">Submit</button>
             </div>
           </div>
           <br />
@@ -105,10 +202,13 @@ export default class App extends React.Component {
             </div>
           </div>
         </div>
-
-
-
+        <div className="form-group">
+          <div className="col-sm-offset-2 col-sm-10">
+            {this.state.isToggle === true ? this.renderTable() : null}
+          </div>
+        </div>
       </div>
+
     );
   }
 }
