@@ -36,32 +36,35 @@ class Table extends React.Component {
     currentBalanceArray.pop()
 
 
+
     if (this.props.isToggle == true) {
       return (
         <div>
-          <h3>Payments Over Time</h3>
-          <table className="table">
-            <thead>
-              <tr>
-                <th></th>
-                {yearArray.map((e, i) => <th>Year {i + 1}</th>)}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Total Interest Paid</td>
-                {interestArray.map((e, i) => <td>{interestArray[i]}</td>)}
-              </tr>
-              <tr>
-                <td>Total Paid Off</td>
-                {paidOffArray.map((e, i) => <td>{paidOffArray[i]}</td>)}
-              </tr>
-              <tr>
-                <td>Current Balance</td>
-                {currentBalanceArray.map((e, i) => <td>{currentBalanceArray[i]}</td>)}
-              </tr>
-            </tbody>
-          </table>
+          <div className="h6">Payments Over Time</div>
+          <div className="table-responsive rounded border">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th></th>
+                  {yearArray.map((e, i) => <th>Year {i + 1}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Total Interest Paid</td>
+                  {interestArray.map((e, i) => <td>{interestArray[i]}</td>)}
+                </tr>
+                <tr>
+                  <td>Total Paid Off</td>
+                  {paidOffArray.map((e, i) => <td>{paidOffArray[i]}</td>)}
+                </tr>
+                <tr>
+                  <td>Current Balance</td>
+                  {currentBalanceArray.map((e, i) => <td>{currentBalanceArray[i]}</td>)}
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       )
     }
@@ -144,7 +147,7 @@ export default class App extends React.Component {
 
     this.setState({
       output: output,
-      outputText: 'is your payment.',
+      outputText: 'Monthly Payment: $',
     })
 
   };
@@ -162,6 +165,7 @@ export default class App extends React.Component {
     return (
       <div className='container'>
 
+        <br />
         <h3 className='h1 text-center'>Mortgage Calculator</h3>
         <br />
 
@@ -192,16 +196,21 @@ export default class App extends React.Component {
           </div>
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <button type="submit" name="submit" onClick={this.handleClick} className="btn btn-default">Submit</button>
+              <button type="submit" name="submit" onClick={this.handleClick} className="btn btn-primary btn-block">Submit</button>
             </div>
           </div>
           <br />
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <div id="output">{output} {outputText}</div>
+              <div className="panel panel-default">
+                <div className="panel-body">
+                  <div className='h5' id="output">{outputText} {output}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <hr></hr>
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10">
             {this.state.isToggle === true ? this.renderTable() : null}
