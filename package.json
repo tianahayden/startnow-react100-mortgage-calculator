@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "build": "npm run less && webpack --mode development",
-    "start": "node server/index.js",
+    "start": "npm run build && node server/index.js",
     "less": "lessc src/css/style.less dist/css/style.css",
     "lint": "eslint .",
     "test": "npm run build && mocha test/.setup.js test/*.spec.js --exit"
@@ -20,6 +20,7 @@
     "expect": "^1.20.2",
     "express": "^4.15.3",
     "json-loader": "^0.5.4",
+    "less": "^2.7.1",
     "lodash": "^4.15.0",
     "lodash-webpack-plugin": "^0.10.2",
     "morgan": "^1.8.1",
